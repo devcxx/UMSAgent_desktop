@@ -5,6 +5,7 @@
 #include <ctime>
 #include <infoware/system.hpp>
 #include <sstream>
+#include <chrono>
 
 #if defined(_WIN32) || defined(__MINGW32__) || defined(__CYGWIN__)
 #include <windows.h>
@@ -127,9 +128,23 @@ std::string Utility::getDeviceName()
     return std::string();
 }
 
+std::string Utility::GetNetStates()
+{
+    return "Ethernet";
+}
+
 std::string Utility::getApplicationVersion()
 {
     return appVersion;
+}
+
+int64_t Utility::getNowTicks()
+{
+    std::chrono::time_point<std::chrono::system_clock> now =
+    std::chrono::system_clock::now();
+    auto duration = now.time_since_epoch();
+    auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    return millis;
 }
 
 void Utility::setApplicationVersion(const std::string& version)

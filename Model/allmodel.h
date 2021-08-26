@@ -13,7 +13,7 @@
 namespace UMSAgent {
 class AllModel {
 public:
-    AllModel(const std::string& appkey);
+    AllModel();
     //get user event info
     Event getEventInfo(const std::string& eventid, const std::string& pagename, const std::string& label = "", int acc = 1);
     //get online config info

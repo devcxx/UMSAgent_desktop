@@ -5,17 +5,17 @@
 
 namespace UMSAgent {
 namespace Constants {
-    const std::string kBaseUrl = "";
-    const std::string kPostClientDataUrl = "?/ums/postClientData";
-    const std::string kCheckNewVersionUrl = "?/ums/getApplicationUpdate";
-    const std::string kGetOnlineConfigUrl = "?/ums/getOnlineConfiguration";
-    const std::string kPostEventUrl = "?/ums/postEvent";
-    const std::string kAllDataUrl = "?/ums/uploadLog";
-    const std::string kErrorDataUrl = "?/ums/postErrorLog";
-    const std::string kPostActivityLog = "?/ums/postActivityLog";
-    const std::string kPostTag = "?/ums/postTag";
-    const std::string kPostUserid = "?/ums/postUserid";
-    const std::string kPostPushid = "?/ums/postPushid";
+    extern std::string kBaseUrl;
+    extern std::string kPostClientDataUrl;
+    extern std::string kCheckNewVersionUrl;
+    extern std::string kGetOnlineConfigUrl;
+    extern std::string kPostEventUrl;
+    extern std::string kAllDataUrl;
+    extern std::string kErrorDataUrl;
+    extern std::string kPostActivityLog;
+    extern std::string kPostTag;
+    extern std::string kPostUserid;
+    extern std::string kPostPushid;
 }
 }
 

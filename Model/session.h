@@ -3,21 +3,23 @@
 
 #include <map>
 #include <string>
+#include "../Common/variant.hpp"
 
 namespace UMSAgent {
 class Session {
 public:
     Session();
     void initNewSession();
+    static Session initSessionWithOldData();
     void generateSessionID();
     void onPageStart(const std::string& pagename);
     void onPageEnd(const std::string& pagename);
 
 public:
     static std::string UMS_SESSION_ID;
-
-private:
-    std::map<std::string, std::string> m_pageDictionary;
+    typedef nonstd::variant<int, std::int64_t, std::string> Variant;
+    std::map<std::string, Variant> pageDictionary;
+    std::string endtime;
 };
 }
 

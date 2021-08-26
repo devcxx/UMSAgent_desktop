@@ -2,12 +2,12 @@
 
 #include "../Common/urlencode.h"
 #include "../Common/utility.h"
+#include "../Common/constants.h"
 #include "../UMS/umsmanager.h"
-#include <infoware/version.hpp>
+#include "../Common/storagesettings.h"
 
 namespace UMSAgent {
-AllModel::AllModel(const std::string& appkey)
-    : key(appkey)
+AllModel::AllModel()
 {
 }
 
@@ -78,8 +78,13 @@ ClientData AllModel::getClientData()
     clientdata.version = Utility::getApplicationVersion();
     clientdata.appkey = key;
     clientdata.time = Utility::getTime();
+    ApplicationSettings settings;
+    clientdata.userid = settings["UserIdentifier"];
+
     // clientdata.userid
     clientdata.isMobileDevice = false;
+    clientdata.network = Utility::GetNetStates();
+    clientdata.defaultbrowser = "";
     return clientdata;
 }
 
@@ -87,7 +92,37 @@ std::string AllModel::getUrl(DataType type)
 {
     std::string url;
     switch (type) {
-    case DataType::ClientData:
+    case DataType::CLIENTDATA: //get client data
+        url = Constants::kBaseUrl + Constants::kPostClientDataUrl;
+        break;
+    case DataType::CONFIGDATA: //get online config data
+        url = Constants::kBaseUrl + Constants::kGetOnlineConfigUrl;
+        break;
+    case DataType::UPDATEDATA: //check new version data
+        url = Constants::kBaseUrl + Constants::kCheckNewVersionUrl;
+        break;
+    case DataType::EVENTDATA: //post user event data
+        url = Constants::kBaseUrl + Constants::kPostEventUrl;
+        break;
+    case DataType::AllDATA: // all data
+        url = Constants::kBaseUrl + Constants::kAllDataUrl;
+        break;
+    case DataType::ERRORDATA: // error data
+        url = Constants::kBaseUrl + Constants::kErrorDataUrl;
+        break;
+    case DataType::PAGEINFODATA: // page info data
+        url = Constants::kBaseUrl + Constants::kPostActivityLog;
+        break;
+    case DataType::TAGDATA: //tag data
+        url = Constants::kBaseUrl + Constants::kPostTag;
+        break;
+    case DataType::USERID: //post userid
+        url = Constants::kBaseUrl + Constants::kPostPushid;
+        break;
+    case DataType::PUSHID: //post pushid
+        url = Constants::kBaseUrl + Constants::kPostPushid;
+        break;
+    default:
         break;
     }
     return url;

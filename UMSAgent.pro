@@ -13,10 +13,15 @@ CONFIG += c++11
 
 SOURCES += \
     Common/constants.cpp \
+    Common/datamanager.cpp \
+    Common/filesave.cpp \
+    Common/obj2json.cpp \
+    Common/post.cpp \
+    Common/storagesettings.cpp \
     Common/urlencode.cc \
     Common/utility.cpp \
     Common/machineid.cpp \
-    Common/ConvertUTF.c \
+#    Common/ConvertUTF.c \
     Common/guid.cpp \
     Model/allmodel.cpp \
     Model/deviceinfo.cpp \
@@ -37,15 +42,22 @@ SOURCES += \
     MyObject/userid.cpp \
     MyObject/userrepolicy.cpp \
     UMS/umsmanager.cpp \
-    umsagent.cpp
+    umsagent.cpp \
+    umsapi.cpp
 
 HEADERS += \
     Common/Singleton.h \
+    Common/datamanager.h \
+    Common/filesave.h \
+    Common/obj2json.h \
+    Common/post.h \
+    Common/storagesettings.h \
     Common/utility.h \
     Common/machineid.h \
-    Common/ConvertUTF.h \
-    Common/SimpleIni.h \
+#    Common/ConvertUTF.h \
+#    Common/SimpleIni.h \
     Common/guid.hpp \
+    Common/ThreadPool.h \
     Model/allmodel.h \
     Model/deviceinfo.h \
     Model/session.h \
@@ -69,8 +81,8 @@ HEADERS += \
     MyObject/clientdata.h \
     MyObject/commonret.h \
     MyObject/pageinfo.h \
-    umsagent.h
-
+    umsagent.h \
+    umsapi.h
 
 win32 {
     INCLUDEPATH += $$PWD/ThirdParty/win32/infoware/include
@@ -81,7 +93,7 @@ win32 {
         LIBS += -L$$PWD/ThirdParty/win32/infoware/lib infowared.lib
         LIBS += -L$$PWD/ThirdParty/win32/jsoncpp/lib jsoncpp.lib
         LIBS += -L$$PWD/ThirdParty/win32/curl/lib libcurl.lib
-        LIBS += -L$$PWD/ThirdParty/win32/restclient-cpp/lib restclient-cpp.lib
+        LIBS += -L$$PWD/ThirdParty/win32/restclient-cpp/lib restclient-cppd.lib
     } else {
         LIBS += -L$$PWD/ThirdParty/win32/infoware/lib infoware.lib
         LIBS += -L$$PWD/ThirdParty/win32/jsoncpp/lib jsoncpp.lib

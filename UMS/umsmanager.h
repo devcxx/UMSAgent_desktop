@@ -8,6 +8,7 @@
 #include "../Model/allmodel.h"
 #include "../Model/session.h"
 #include "../MyObject/userrepolicy.h"
+#include "../Common/storagesettings.h"
 
 namespace UMSAgent {
 class UmsManager : public Singleton<UmsManager> {
@@ -16,17 +17,20 @@ public:
     void initUserRepolicy();
     void initUserSetting();
 
+    void addPageStart(const std::string& pagename);
+    void addPageEnd(const std::string& pagename);
+
     //protected:
     UmsManager();
 
 public:
     std::string appkey;
-    std::unique_ptr<Session> app_session;
+    Session app_session;
     std::string session_id;
     bool readOnlineConfig = false;
-    std::unique_ptr<UserRepolicy> userRepolicy;
-    std::unique_ptr<AllModel> model;
-    std::unique_ptr<CSimpleIniA> setting;
+    UserRepolicy userRepolicy;
+    AllModel model;
+    ApplicationSettings setting;
 };
 }
 
