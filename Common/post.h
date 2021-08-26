@@ -2,7 +2,7 @@
 #define POST_H
 
 #include "../MyObject/datatype.h"
-#include "Delegate.h"
+#include "Delegate.hpp"
 #include "../Common/obj2json.h"
 #include "../MyObject/commonret.h"
 #include <restclient-cpp/restclient.h>
@@ -17,9 +17,12 @@ template <class T>
 class Post
 {
 public:
-    Post(DataType t, T const& o) : type(t), obj(o) { }
+    Post(DataType t, T const& o) : type(t), obj(o) {
+        getPostInfo(type, obj);
+    }
     void getPostInfo(DataType type, const T& data);
     void sendData(const std::string& url);
+
     std::string my_ur;
     std::string message;
     T obj;

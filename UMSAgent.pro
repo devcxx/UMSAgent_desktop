@@ -21,6 +21,7 @@ SOURCES += \
     Common/urlencode.cc \
     Common/utility.cpp \
     Common/machineid.cpp \
+    Common/easylogging++.cc \
 #    Common/ConvertUTF.c \
     Common/guid.cpp \
     Model/allmodel.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     Common/storagesettings.h \
     Common/utility.h \
     Common/machineid.h \
+    Common/easylogging++.h \
 #    Common/ConvertUTF.h \
 #    Common/SimpleIni.h \
     Common/guid.hpp \

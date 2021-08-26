@@ -3,13 +3,29 @@
 #include "Common/datamanager.h"
 #include "Common/utility.h"
 #include "UMS/umsmanager.h"
+#include "Common/easylogging++.h"
 
+INITIALIZE_EASYLOGGINGPP
+using namespace el;
 using namespace UMSAgent;
 
 static DataManager& manager = DataManager::getInstance();
 static bool isNewSession;
 static std::string device_resolution;
 static bool isValidKey = false;
+
+static void initLogger()
+{
+    Configurations c;
+    c.setToDefault();
+    c.setGlobally(el::ConfigurationType::MaxLogFileSize, "2097152");
+    c.setGlobally(ConfigurationType::Format, "%datetime %level: %msg");
+    c.setGlobally(ConfigurationType::ToFile, "false");
+    c.setGlobally(ConfigurationType::ToStandardOutput, "false");
+    c.setGlobally(ConfigurationType::Filename, "UMSAgent.log");
+    Loggers::reconfigureLogger("default", c);
+    Loggers::addFlag(el::LoggingFlag::AutoSpacing);
+}
 
 static void registerEvent()
 {
@@ -18,6 +34,7 @@ static void registerEvent()
 static bool isAppkeyValid(const std::string& appkey)
 {
     if (appkey.empty()) {
+        LOG(ERROR) << "appkey is invalid!";
         return false;
     }
     return true;
@@ -26,6 +43,7 @@ static bool isAppkeyValid(const std::string& appkey)
 void UMSApi::onAppStart(const std::string& appKey, const std::string& url)
 {
     if (isAppkeyValid(appKey)) {
+        initLogger();
         Constants::kBaseUrl = url;
         UmsManager::getInstance().appkey = appKey;
         UmsManager::getInstance().init();
@@ -38,11 +56,21 @@ void UMSApi::onAppStart(const std::string& appKey, const std::string& url)
 
 void UMSApi::bindUserIdentifier(const std::string& userid)
 {
+    ApplicationSettings settings;
+    if (settings.Contains("UserIdentifier"))
+        settings.Remove("UserIdentifier");
+    settings.Add("UserIdentifier", userid);
+    settings.Save();
+    //post userid
+    postUserid(userid);
 }
 
 void UMSApi::postClientdata()
 {
     if (isValidKey) {
+    }
+    else {
+        LOG(ERROR) << "not valid appkey!";
     }
 }
 
