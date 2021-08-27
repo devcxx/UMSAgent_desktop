@@ -1,10 +1,10 @@
 #include "umsapi.h"
 #include "Common/constants.h"
 #include "Common/datamanager.h"
-#include "Common/utility.h"
-#include "UMS/umsmanager.h"
 #include "Common/easylogging++.h"
+#include "Common/utility.h"
 #include "CrashReporter/minidump-analyzer.h"
+#include "UMS/umsmanager.h"
 
 #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (defined(__cplusplus) && __cplusplus >= 201703L)) && defined(__has_include)
 #if __has_include(<filesystem>) && (!defined(__MAC_OS_X_VERSION_MIN_REQUIRED) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500)
@@ -70,14 +70,11 @@ void UMSApi::onAppStart(const std::string& appKey, const std::string& url)
 void UMSApi::bindUserIdentifier(const std::string& userid)
 {
     ApplicationSettings settings;
-    if (settings.Contains("UserIdentifier"))
-        settings.Remove("UserIdentifier");
-    settings.Add("UserIdentifier", userid);
+    settings.Set("UserIdentifier", userid);
     settings.Save();
     //post userid
-    postUserid(userid);
+    //    postUserid(userid);
 }
-
 
 void UMSApi::bindApplicationVersion(const std::string& version)
 {
@@ -87,8 +84,9 @@ void UMSApi::bindApplicationVersion(const std::string& version)
 void UMSApi::postClientdata()
 {
     if (isValidKey) {
-    }
-    else {
+        manager.clientDataProceed();
+        manager.allDataProceed();
+    } else {
         LOG(ERROR) << "not valid appkey!";
     }
 }
@@ -113,36 +111,36 @@ void UMSApi::onEvent(const std::string& event_id, const std::string& pagename, c
     manager.eventDataProceed(event_id, pagename, label, acc);
 }
 
-void UMSApi::onPageBegin(const std::string &name)
+void UMSApi::onPageBegin(const std::string& name)
 {
     if (!name.empty()) {
         UmsManager::getInstance().addPageStart(name);
     }
 }
 
-void UMSApi::onPageEnd(const std::string &name)
+void UMSApi::onPageEnd(const std::string& name)
 {
     if (!name.empty()) {
         UmsManager::getInstance().addPageEnd(name);
     }
 }
 
-void UMSApi::postTag(const std::string &tag)
+void UMSApi::postTag(const std::string& tag)
 {
     manager.tagDataProceed(tag);
 }
 
-void UMSApi::postUserid(const std::string &userid)
+void UMSApi::postUserid(const std::string& userid)
 {
     manager.useridDataProceed(userid);
 }
 
-void UMSApi::postPushid(const std::string &pushid)
+void UMSApi::postPushid(const std::string& pushid)
 {
     manager.pushidDataProceed(pushid);
 }
 
-void UMSApi::postCrashData(const std::string &dumpdir)
+void UMSApi::postCrashData(const std::string& dumpdir)
 {
     std::vector<std::string> dumps;
     if (fs::is_directory(dumpdir)) {
@@ -159,11 +157,16 @@ void UMSApi::postCrashData(const std::string &dumpdir)
         Json::Value stacktraceJS;
         bool ret = CrashReporter::ProcessMinidump(stacktraceJS, dump);
         if (ret) {
-            std::uint32_t stamp = stacktraceJS["time"].asUInt();
+            std::uint32_t stamp = stacktraceJS["crash_info"]["time"].asUInt();
             std::string time = Utility::timeDataStampToString(stamp);
             manager.crashDataProceed(time, stacktraceJS.toStyledString());
             std::string dump_bak = dump + ".bak";
             fs::rename(dump, dump_bak);
         }
     }
+}
+
+void UMSApi::updateOnlineConfig()
+{
+    manager.onlineConfigProceed();
 }

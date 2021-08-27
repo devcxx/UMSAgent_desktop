@@ -16,6 +16,7 @@ Session::Session()
 
 void Session::initNewSession()
 {
+    generateSessionID();
 }
 
 Session Session::initSessionWithOldData()

@@ -17,7 +17,7 @@ Event AllModel::getEventInfo(const std::string& eventid, const std::string& page
     e.event_identifier = eventid;
     e.activity = UrlEncodeString(pagename);
     e.time = Utility::getTime();
-    e.appkey = key;
+    e.appkey = UmsManager::getInstance().appkey;
     e.label = UrlEncodeString(label);
     e.version = Utility::getApplicationVersion();
     e.acc = acc;
@@ -76,7 +76,7 @@ ClientData AllModel::getClientData()
     clientdata.deviceid = Utility::getDeviceId();
     clientdata.devicename = Utility::getDeviceName();
     clientdata.version = Utility::getApplicationVersion();
-    clientdata.appkey = key;
+    clientdata.appkey = UmsManager::getInstance().appkey;
     clientdata.time = Utility::getTime();
     ApplicationSettings settings;
     clientdata.userid = settings["UserIdentifier"];

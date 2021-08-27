@@ -98,6 +98,8 @@ SOURCES += \
 
 INCLUDEPATH += $$PWD/ghc
 
+DESTDIR = $$PWD/../bin
+
 win32 {
     DEFINES += XP_WIN XP_WIN32
 

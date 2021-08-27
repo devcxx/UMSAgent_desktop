@@ -31,9 +31,9 @@ void FileSave::saveFile(DataType type, T const& obj) {
     settings.Save();
 
     if (settings.Contains("hasDateToSend")) {
-        settings.Set("settings", "1");
+        settings.Set("hasDateToSend", "1");
     } else {
-        settings.Add("settings", "1");
+        settings.Add("hasDateToSend", "1");
     }
 
 }

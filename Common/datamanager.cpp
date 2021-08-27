@@ -1,14 +1,17 @@
 #include "datamanager.h"
-#include "../Common/utility.h"
-#include "../Common/post.h"
-#include "../MyObject/tag.h"
-#include "../MyObject/allinfo.h"
-#include "../Common/filesave.h"
 #include "../Common/Delegate.hpp"
+#include "../Common/filesave.h"
+#include "../Common/post.h"
+#include "../Common/utility.h"
+#include "../MyObject/allinfo.h"
+#include "../MyObject/tag.h"
+#include "../UMS/umsmanager.h"
 
 namespace UMSAgent {
 DataManager::DataManager()
 {
+    appkey = UmsManager::getInstance().appkey;
+    model.key = appkey;
 }
 
 void DataManager::clientDataProceed()
@@ -16,18 +19,18 @@ void DataManager::clientDataProceed()
     ClientData obj = model.getClientData();
     if (Utility::isNetWorkConnected()) {
         Post<ClientData> post(DataType::CLIENTDATA, obj);
-//        std::function<void(DataType type, const std::string&, ClientData const&)> fn = &DataManager::getData<ClientData>;
-//        post.stateChanged.Subscribe(&DataManager::getData<ClientData>);
+        //        std::function<void(DataType type, const std::string&, ClientData const&)> fn = &DataManager::getData<ClientData>;
+        //        post.stateChanged.Subscribe(&DataManager::getData<ClientData>);
         post.sendData(model.getUrl(DataType::CLIENTDATA));
     } else {
         FileSave::saveFile(DataType::CLIENTDATA, obj);
     }
 }
 
-void DataManager::eventDataProceed(const std::string &eventid, const std::string &pagename, const std::string &lable, int acc, double count)
+void DataManager::eventDataProceed(const std::string& eventid, const std::string& pagename, const std::string& lable, int acc, double count)
 {
-    Event obj = model.getEventInfo(eventid, pagename, lable,acc);
-    if (settings["repolicy"] == "1" && Utility::isNetWorkConnected()) {
+    Event obj = model.getEventInfo(eventid, pagename, lable, acc);
+    if (Utility::isNetWorkConnected()) {
         Post<Event> post(DataType::ERRORDATA, obj);
         post.sendData(model.getUrl(DataType::EVENTDATA));
     } else {
@@ -35,17 +38,46 @@ void DataManager::eventDataProceed(const std::string &eventid, const std::string
     }
 }
 
+void DataManager::onlineConfigProceed()
+{
+    OnLineConfig obj = model.getOnlineConfig();
+    if (Utility::isNetWorkConnected()) {
+        Post<OnLineConfig> post(DataType::CONFIGDATA, obj);
+        post.sendData(model.getUrl(DataType::CONFIGDATA));
+    }
+}
+
 void DataManager::allDataProceed()
 {
     if (Utility::isNetWorkConnected() && settings["hasDateToSend"] == "1") {
-
+        std::string allData = Obj2Json::allData2jsonstr();
+        RestClient::Response res = RestClient::post(model.getUrl(DataType::AllDATA), "application/x-www-form-urlencoded", allData);
+        if (res.code == 200) {
+            ApplicationSettings settings;
+            if (settings.Contains("clientdata")) {
+                settings.Remove("clientdata");
+            }
+            if (settings.Contains("eventdata")) {
+                settings.Remove("eventdata");
+            }
+            if (settings.Contains("errordata")) {
+                settings.Remove("errordata");
+            }
+            if (settings.Contains("pageinfo")) {
+                settings.Remove("pageinfo");
+            }
+            if (settings.Contains("hasDateToSend")) {
+                settings.Remove("hasDateToSend");
+            }
+            settings.Save();
+        }
     }
 }
 
 void DataManager::crashDataProceed(const std::string& time, const std::string& stacktrace)
 {
     ErrorInfo obj = model.getErrorInfo(time, stacktrace);
-    if (settings["repolicy"] == "1" && Utility::isNetWorkConnected()) {
+    if (Utility::isNetWorkConnected()) {
         Post<ErrorInfo> post(DataType::ERRORDATA, obj);
         post.sendData(model.getUrl(DataType::ERRORDATA));
     } else {
@@ -53,9 +85,9 @@ void DataManager::crashDataProceed(const std::string& time, const std::string& s
     }
 }
 
-void DataManager::pageInfoDataProceed(const PageInfo &obj)
+void DataManager::pageInfoDataProceed(const PageInfo& obj)
 {
-    if (settings["repolicy"] == "1" && Utility::isNetWorkConnected()) {
+    if (Utility::isNetWorkConnected()) {
         Post<PageInfo> post(DataType::PAGEINFODATA, obj);
         post.sendData(model.getUrl(DataType::PAGEINFODATA));
     } else {
@@ -63,10 +95,10 @@ void DataManager::pageInfoDataProceed(const PageInfo &obj)
     }
 }
 
-void DataManager::tagDataProceed(const std::string &tags)
+void DataManager::tagDataProceed(const std::string& tags)
 {
     Tag obj = model.getTagData(tags);
-    if (settings["repolicy"] == "1" && Utility::isNetWorkConnected()) {
+    if (Utility::isNetWorkConnected()) {
         Post<Tag> post(DataType::TAGDATA, obj);
         post.sendData(model.getUrl(DataType::TAGDATA));
     } else {
@@ -74,19 +106,18 @@ void DataManager::tagDataProceed(const std::string &tags)
     }
 }
 
-void DataManager::useridDataProceed(const std::string &userid)
+void DataManager::useridDataProceed(const std::string& userid)
 {
     Userid obj = model.getUseridData(userid);
     Post<Userid> post(DataType::USERID, obj);
     post.sendData(model.getUrl(DataType::USERID));
 }
 
-void DataManager::pushidDataProceed(const std::string &pushid)
+void DataManager::pushidDataProceed(const std::string& pushid)
 {
     Pushid obj = model.getPushidData(pushid);
     Post<Pushid> post(DataType::PUSHID, obj);
     post.sendData(model.getUrl(DataType::PUSHID));
 }
-
 
 }

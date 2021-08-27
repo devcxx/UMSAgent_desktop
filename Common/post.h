@@ -47,7 +47,7 @@ void Post<T>::sendData(const std::string &url)
     std::string ret;
     ret = Obj2Json::obj2jsonstr<CommonRet>(errorRet);
 //    stateChanged(type, ret, message);
-    if (errorRet.flag != "1") {
+    if (r.code != 200) {
         FileSave::saveFile<T>(type, obj);
     }
 }

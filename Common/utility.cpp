@@ -75,7 +75,8 @@ bool Utility::isNetWorkConnected()
 
 std::string Utility::getDeviceId()
 {
-    return machineid::machineHash();
+    std::uint64_t machHash = std::hash<std::string>{}(machineid::machineHash());
+    return std::to_string(machHash);
 }
 
 std::string Utility::getTime()

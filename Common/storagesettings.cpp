@@ -43,7 +43,7 @@ bool LocalStorage::Save()
 
 std::string LocalStorage::Get(const std::string& section, const std::string& key)
 {
-    const char* value = ini->GetValue(section.c_str(), key.c_str());
+    const char* value = ini->GetValue(section.c_str(), key.c_str(), "");
     return std::string(value);
 }
 

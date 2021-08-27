@@ -1,6 +1,5 @@
 #include "umsmanager.h"
 
-
 namespace UMSAgent {
 
 UmsManager::UmsManager()
@@ -25,60 +24,44 @@ void UmsManager::initUserRepolicy()
 
 void UmsManager::initUserSetting()
 {
-    if (!setting.Contains("UserIdentifier"))
-    {
+    if (!setting.Contains("UserIdentifier")) {
         setting.Add("UserIdentifier", "");
-
     }
-    if (!setting.Contains("hasDateToSend"))
-    {
+    if (!setting.Contains("hasDateToSend")) {
         setting.Add("hasDateToSend", "0");
-
     }
 
-    if (!setting.Contains("repolicy"))
-    {
+    if (!setting.Contains("repolicy")) {
         setting.Add("repolicy", userRepolicy.repolicy);
-    }
-    else
-    {
+    } else {
         userRepolicy.repolicy = setting["repolicy"];
     }
-    if (!setting.Contains("autolocation"))
-    {
+    if (!setting.Contains("autolocation")) {
         setting.Add("autolocation", userRepolicy.autoLocation);
-    }
-    else
-    {
+    } else {
         userRepolicy.autoLocation = setting["autolocation"];
     }
 
-    if (!setting.Contains("sessiontime"))
-    {
+    if (!setting.Contains("sessiontime")) {
         setting.Add("sessiontime", userRepolicy.sessionTime);
-    }
-    else
-    {
+    } else {
         userRepolicy.sessionTime = setting["sessiontime"];
     }
 
-    if (!setting.Contains("updateonlywifi"))
-    {
+    if (!setting.Contains("updateonlywifi")) {
         setting.Add("updateonlywifi", userRepolicy.updateOnlyWifi);
-    }
-    else
-    {
+    } else {
         userRepolicy.updateOnlyWifi = setting["updateonlywifi"];
     }
     setting.Save();
 }
 
-void UmsManager::addPageStart(const std::string &pagename)
+void UmsManager::addPageStart(const std::string& pagename)
 {
     app_session.onPageStart(pagename);
 }
 
-void UmsManager::addPageEnd(const std::string &pagename)
+void UmsManager::addPageEnd(const std::string& pagename)
 {
     app_session.onPageEnd(pagename);
 }
