@@ -6,6 +6,7 @@
 #include <infoware/system.hpp>
 #include <sstream>
 #include <chrono>
+#include <iomanip>
 
 #if defined(_WIN32) || defined(__MINGW32__) || defined(__CYGWIN__)
 #include <windows.h>
@@ -145,6 +146,16 @@ int64_t Utility::getNowTicks()
     auto duration = now.time_since_epoch();
     auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
     return millis;
+}
+
+std::string Utility::timeDataStampToString(uint32_t timestamp)
+{
+    std::time_t tmp = timestamp;
+    std::tm* t = std::gmtime(&tmp);
+    std::stringstream ss;
+    ss << std::put_time(t, "%Y-%m-%d-%H-%M-%S");
+    std::string output = ss.str();
+    return output;
 }
 
 void Utility::setApplicationVersion(const std::string& version)

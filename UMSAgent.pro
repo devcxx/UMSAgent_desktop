@@ -86,16 +86,36 @@ HEADERS += \
     umsagent.h \
     umsapi.h
 
+HEADERS += \
+    CrashReporter/MinidumpAnalyzerUtils.h \
+    CrashReporter/MozStackFrameSymbolizer.h \
+    CrashReporter/Win64ModuleUnwindMetadata.h \
+
+SOURCES += \
+    CrashReporter/minidump-analyzer.cpp \
+    CrashReporter/MozStackFrameSymbolizer.cpp \
+    CrashReporter/Win64ModuleUnwindMetadata.cpp \
+
+INCLUDEPATH += $$PWD/ghc
+
 win32 {
+    DEFINES += XP_WIN XP_WIN32
+
     INCLUDEPATH += $$PWD/ThirdParty/win32/infoware/include
     INCLUDEPATH += $$PWD/ThirdParty/win32/jsoncons/include
+    INCLUDEPATH += $$PWD/ThirdParty/win32/jsoncpp/include
     INCLUDEPATH += $$PWD/ThirdParty/win32/curl/include
     INCLUDEPATH += $$PWD/ThirdParty/win32/restclient-cpp/include
+    INCLUDEPATH += $$PWD/ThirdParty/win32/breakpad/include
+
     CONFIG(debug, debug|release) {
         LIBS += -L$$PWD/ThirdParty/win32/infoware/lib infowared.lib
-        LIBS += -L$$PWD/ThirdParty/win32/jsoncpp/lib jsoncpp.lib
+        LIBS += -L$$PWD/ThirdParty/win32/jsoncpp/lib/debug jsoncpp_static.lib
         LIBS += -L$$PWD/ThirdParty/win32/curl/lib libcurl.lib
         LIBS += -L$$PWD/ThirdParty/win32/restclient-cpp/lib restclient-cppd.lib
+        LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/debug common.lib
+        LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/debug processor.lib
+        LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/debug libdisasm.lib
     } else {
         LIBS += -L$$PWD/ThirdParty/win32/infoware/lib infoware.lib
         LIBS += -L$$PWD/ThirdParty/win32/jsoncpp/lib jsoncpp.lib

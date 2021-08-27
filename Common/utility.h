@@ -20,6 +20,7 @@ public:
     static std::string GetNetStates();
     static std::string getApplicationVersion();
     static std::int64_t getNowTicks();
+    static std::string timeDataStampToString(std::uint32_t timestamp);
     static void setApplicationVersion(const std::string& version);
     static std::string appVersion;
 };

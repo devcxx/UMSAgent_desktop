@@ -9,6 +9,7 @@
 #include "../MyObject/tag.h"
 #include "../MyObject/updatepreference.h"
 #include "../MyObject/userid.h"
+#include "../MyObject/errorinfo.h"
 
 namespace UMSAgent {
 class AllModel {
@@ -27,6 +28,7 @@ public:
     Pushid getPushidData(const std::string& pushid);
     //get client data
     ClientData getClientData();
+    ErrorInfo getErrorInfo(const std::string& time, const std::string& stacktrace);
     std::string getUrl(DataType type);
 
     std::string key;

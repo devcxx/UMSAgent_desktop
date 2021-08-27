@@ -25,8 +25,13 @@ enum class DataType {
 UMSAGENT_EXPORT void onAppStart(const std::string& appKey, const std::string& url);
 // bind user id
 UMSAGENT_EXPORT void bindUserIdentifier(const std::string& userid);
+UMSAGENT_EXPORT void bindApplicationVersion(const std::string& version);
+
 //post clientdata and all data
 UMSAGENT_EXPORT void postClientdata();
+
+UMSAGENT_EXPORT void postCrashData(const std::string& dumpdir);
+
 //upload event
 UMSAGENT_EXPORT void onEvent(const std::string& event_id, const std::string& pagename);
 //upload event with lable

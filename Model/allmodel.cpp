@@ -88,6 +88,18 @@ ClientData AllModel::getClientData()
     return clientdata;
 }
 
+ErrorInfo AllModel::getErrorInfo(const std::string& time, const std::string& stacktrace)
+{
+    ErrorInfo error;
+    error.appkey = UmsManager::getInstance().appkey;
+    error.stacktrace = stacktrace;
+    error.time = time;
+    error.version = Utility::getApplicationVersion();
+    error.deviceid = Utility::getDeviceName();
+    error.os_version = Utility::getOsVersion();
+    return error;
+}
+
 std::string AllModel::getUrl(DataType type)
 {
     std::string url;

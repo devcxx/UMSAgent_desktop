@@ -4,6 +4,19 @@
 #include "Common/utility.h"
 #include "UMS/umsmanager.h"
 #include "Common/easylogging++.h"
+#include "CrashReporter/minidump-analyzer.h"
+
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (defined(__cplusplus) && __cplusplus >= 201703L)) && defined(__has_include)
+#if __has_include(<filesystem>) && (!defined(__MAC_OS_X_VERSION_MIN_REQUIRED) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500)
+#define GHC_USE_STD_FS
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
+#endif
+#ifndef GHC_USE_STD_FS
+#include <filesystem.hpp>
+namespace fs = ghc::filesystem;
+#endif
 
 INITIALIZE_EASYLOGGINGPP
 using namespace el;
@@ -65,6 +78,12 @@ void UMSApi::bindUserIdentifier(const std::string& userid)
     postUserid(userid);
 }
 
+
+void UMSApi::bindApplicationVersion(const std::string& version)
+{
+    Utility::setApplicationVersion(version);
+}
+
 void UMSApi::postClientdata()
 {
     if (isValidKey) {
@@ -121,4 +140,30 @@ void UMSApi::postUserid(const std::string &userid)
 void UMSApi::postPushid(const std::string &pushid)
 {
     manager.pushidDataProceed(pushid);
+}
+
+void UMSApi::postCrashData(const std::string &dumpdir)
+{
+    std::vector<std::string> dumps;
+    if (fs::is_directory(dumpdir)) {
+        for (auto& p : fs::recursive_directory_iterator(dumpdir)) {
+            if (p.path().extension() == ".dmp") {
+                dumps.push_back(p.path().string());
+            }
+        }
+    } else {
+        dumps.push_back(dumpdir);
+    }
+
+    for (auto& dump : dumps) {
+        Json::Value stacktraceJS;
+        bool ret = CrashReporter::ProcessMinidump(stacktraceJS, dump);
+        if (ret) {
+            std::uint32_t stamp = stacktraceJS["time"].asUInt();
+            std::string time = Utility::timeDataStampToString(stamp);
+            manager.crashDataProceed(time, stacktraceJS.toStyledString());
+            std::string dump_bak = dump + ".bak";
+            fs::rename(dump, dump_bak);
+        }
+    }
 }

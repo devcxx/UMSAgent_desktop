@@ -42,6 +42,17 @@ void DataManager::allDataProceed()
     }
 }
 
+void DataManager::crashDataProceed(const std::string& time, const std::string& stacktrace)
+{
+    ErrorInfo obj = model.getErrorInfo(time, stacktrace);
+    if (settings["repolicy"] == "1" && Utility::isNetWorkConnected()) {
+        Post<ErrorInfo> post(DataType::ERRORDATA, obj);
+        post.sendData(model.getUrl(DataType::ERRORDATA));
+    } else {
+        FileSave::saveFile(DataType::ERRORDATA, obj);
+    }
+}
+
 void DataManager::pageInfoDataProceed(const PageInfo &obj)
 {
     if (settings["repolicy"] == "1" && Utility::isNetWorkConnected()) {

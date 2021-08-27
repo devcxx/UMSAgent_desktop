@@ -22,7 +22,7 @@ public:
     //all data proceed
     void allDataProceed();
     //save crash info when app crash
-    void crashDataProceed(void* ex, const std::string& flag="ums crash");
+    void crashDataProceed(const std::string& time, const std::string& stacktrace);
     //page visit data proceed
     void pageInfoDataProceed(const PageInfo& obj);
     // tag data proceed
