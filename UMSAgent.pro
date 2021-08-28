@@ -5,13 +5,11 @@ QT += core
 TEMPLATE = lib
 DEFINES += UMSAGENT_LIBRARY
 
-CONFIG += c++11
+CONFIG += c++14
 
 CONFIG(debug, debug|release) {
     TARGET = $$join(TARGET,,,d)
 }
-
-message($$TARGET)
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -133,4 +131,37 @@ win32 {
     }
 
     LIBS += -lgdi32 -lversion -lOle32 -lOleAut32 -lwbemuuid -lkernel32 -luser32 -lwinspool -lshell32 -lole32 -luuid -lcomdlg32 -ladvapi32
+}
+
+macos {
+    DEFINES += DARWIN
+    INCLUDEPATH += $$PWD/ThirdParty/macos/jsoncons/include
+    INCLUDEPATH += $$PWD/ThirdParty/macos/infoware/include
+    INCLUDEPATH += $$PWD/ThirdParty/macos/restclient-cpp/include
+    INCLUDEPATH += $$PWD/ThirdParty/macos/jsoncpp/include
+    INCLUDEPATH += $$PWD/ThirdParty/macos/breakpad/include
+
+    LIBS += -framework Security
+    LIBS += -framework CoreGraphics
+    LIBS += -framework SystemConfiguration
+
+    CONFIG(debug, debug|release) {
+        LIBS += $$PWD/ThirdParty/macos/infoware/lib/libinfowared.a
+        LIBS += $$PWD/ThirdParty/macos/curl/libs/libcurl.a
+        LIBS += $$PWD/ThirdParty/macos/curl/libs/libssl.a
+        LIBS += $$PWD/ThirdParty/macos/curl/libs/libcrypto.a
+        LIBS += $$PWD/ThirdParty/macos/restclient-cpp/lib/librestclient-cppd.a
+        LIBS += $$PWD/ThirdParty/macos/jsoncpp/lib/debug/libjsoncpp.a
+        LIBS += $$PWD/ThirdParty/macos/breakpad/lib/libbreakpad.a
+        LIBS += $$PWD/ThirdParty/macos/breakpad/lib/libdisasm.a
+    } else {
+        LIBS += $$PWD/ThirdParty/macos/infoware/lib/libinfoware.a
+        LIBS += $$PWD/ThirdParty/macos/curl/libs/libcurl.a
+        LIBS += $$PWD/ThirdParty/macos/curl/libs/libssl.a
+        LIBS += $$PWD/ThirdParty/macos/curl/libs/libcrypto.a
+        LIBS += $$PWD/ThirdParty/macos/restclient-cpp/lib/librestclient-cpp.a
+        LIBS += $$PWD/ThirdParty/macos/jsoncpp/lib/release/libjsoncpp.a
+        LIBS += $$PWD/ThirdParty/macos/breakpad/lib/libbreakpad.a
+        LIBS += $$PWD/ThirdParty/macos/breakpad/lib/libdisasm.a
+    }
 }

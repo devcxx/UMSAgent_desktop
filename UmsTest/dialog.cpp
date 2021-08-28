@@ -3,7 +3,7 @@
 #include <umsapi.h>
 
 const static std::string kAppKey = "ec9af1ac7f762fd36fb6dd03a297bd24";
-const static std::string kUmsURL = "http://192.168.3.92:8986/api/a";
+const static std::string kUmsURL = "https://japm.sd7dd.com/a";
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Dialog)

@@ -127,22 +127,22 @@ UTF8toMBCS(const std::string &inp) {
 
 // Check if a file exists at the specified path
 
-static inline bool
-FileExists(const std::string& aPath)
-{
-#if defined(XP_WIN)
-  DWORD attrs = GetFileAttributes(UTF8ToWide(aPath).c_str());
-  return (attrs != INVALID_FILE_ATTRIBUTES);
-#else // Non-Windows
-  struct stat sb;
-  int ret = stat(aPath.c_str(), &sb);
-  if (ret == -1 || !(sb.st_mode & S_IFREG)) {
-    return false;
-  }
+//static inline bool
+//FileExists(const std::string& aPath)
+//{
+//#if defined(XP_WIN)
+//  DWORD attrs = GetFileAttributes(UTF8ToWide(aPath).c_str());
+//  return (attrs != INVALID_FILE_ATTRIBUTES);
+//#else // Non-Windows
+//  struct stat sb;
+//  int ret = stat(aPath.c_str(), &sb);
+//  if (ret == -1 || !(sb.st_mode & S_IFREG)) {
+//    return false;
+//  }
 
-  return true;
-#endif // XP_WIN
-}
+//  return true;
+//#endif // XP_WIN
+//}
 
 } // namespace
 

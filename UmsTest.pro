@@ -26,6 +26,10 @@ CONFIG(debug, debug|release) {
     LIBS += -L$$DESTDIR -lUMSAgent
 }
 
+mac {
+    QMAKE_POST_LINK += $$quote($$[QT_INSTALL_BINS]/macdeployqt \"$${DESTDIR}/$${TARGET}.app\" -libpath=\"$$DESTDIR\"$$escape_expand(\\n\\t))
+}
+
 INCLUDEPATH += $$PWD
 
 # Default rules for deployment.

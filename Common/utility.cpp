@@ -13,6 +13,7 @@
 #include <wininet.h>
 #pragma comment(lib, "Wininet.lib")
 #elif defined(__APPLE__)
+#include <objc/objc.h>
 #include <SystemConfiguration/SystemConfiguration.h>
 #endif
 

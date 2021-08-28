@@ -1,4 +1,7 @@
 #include "storagesettings.h"
+#include <iostream>
+#include <iomanip>
+#include <memory>
 
 namespace UMSAgent {
 LocalStorage::LocalStorage()

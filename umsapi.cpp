@@ -194,7 +194,7 @@ void UMSApi::postCrashData(const std::string& dumpdir)
             if (ret) {
                 std::uint32_t stamp = stacktraceJS["crash_info"]["time"].asUInt();
                 std::string time = Utility::timeDataStampToString(stamp);
-//                manager.crashDataProceed(time, stacktraceJS.toStyledString());
+                manager.crashDataProceed(time, stacktraceJS.toStyledString());
                 std::string done = dump + ".json";
                 std::ofstream ofs(done);
                 ofs << stacktraceJS.toStyledString();
