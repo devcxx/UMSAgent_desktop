@@ -104,9 +104,7 @@ SOURCES += \
 
 INCLUDEPATH += $$PWD/ghc
 
-
-
-DESTDIR = $$PWD/../bin
+DESTDIR = $$PWD/bin
 
 win32 {
     DEFINES += XP_WIN XP_WIN32
@@ -121,7 +119,7 @@ win32 {
     CONFIG(debug, debug|release) {
         LIBS += -L$$PWD/ThirdParty/win32/infoware/lib infowared.lib
         LIBS += -L$$PWD/ThirdParty/win32/jsoncpp/lib/debug jsoncpp_static.lib
-        LIBS += -L$$PWD/ThirdParty/win32/curl/lib libcurl.lib
+        LIBS += -L$$PWD/ThirdParty/win32/curl/lib libcurld.lib
         LIBS += -L$$PWD/ThirdParty/win32/restclient-cpp/lib restclient-cppd.lib
         LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/debug processor.lib
         LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/debug libdisasm.lib

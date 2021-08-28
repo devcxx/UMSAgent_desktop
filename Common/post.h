@@ -40,7 +40,8 @@ void Post<T>::getPostInfo(DataType type, const T& data) {
 template<class T>
 void Post<T>::sendData(const std::string &url)
 {
-    RestClient::Response r = RestClient::post(url, "application/x-www-form-urlencoded", message);
+    std::string data = "content=" + message;
+    RestClient::Response r = RestClient::post(url, "application/x-www-form-urlencoded", data);
     CommonRet errorRet;
     errorRet.flag = std::to_string(r.code);
     errorRet.msg = r.body;
