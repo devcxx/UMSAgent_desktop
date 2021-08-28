@@ -127,7 +127,16 @@ std::string Utility::getResolution()
 
 std::string Utility::getDeviceName()
 {
-    return std::string();
+    std::string result;
+#if defined(_WIN32)
+    CHAR computerName[_MAX_PATH] = { 0 };
+    DWORD arrayLength = _MAX_PATH*sizeof(CHAR);
+    GetComputerNameExA(ComputerNameNetBIOS, computerName, &arrayLength);
+    return computerName;
+#elif defined(__APPLE__)
+
+#endif
+    return result;
 }
 
 std::string Utility::GetNetStates()
