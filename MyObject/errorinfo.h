@@ -13,9 +13,11 @@ struct ErrorInfo {
     std::string deviceid;
     std::string activity;
     std::string appkey;
+    std::string devicename;
+    std::string useridentifier;
 };
 }
 JSONCONS_ALL_MEMBER_TRAITS(UMSAgent::ErrorInfo, os_version,
-    stacktrace, time, version, deviceid, activity, appkey)
+    stacktrace, time, version, deviceid, activity, appkey, devicename, useridentifier)
 
 #endif // ERRORINFO_H

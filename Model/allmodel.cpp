@@ -97,6 +97,9 @@ ErrorInfo AllModel::getErrorInfo(const std::string& time, const std::string& sta
     error.version = Utility::getApplicationVersion();
     error.deviceid = Utility::getDeviceName();
     error.os_version = Utility::getOsVersion();
+    error.devicename = Utility::getKernelVariant();
+    ApplicationSettings settings;
+    error.useridentifier = settings["UserIdentifier"];
     return error;
 }
 

@@ -166,16 +166,26 @@ void UMSApi::postPushid(const std::string& pushid)
 
 void UMSApi::postCrashData(const std::string& dumpdir)
 {
+    if (!fs::exists(dumpdir))
+        return;
+
     pool.enqueue([](const std::string& dumpdir) {
         std::vector<std::string> dumps;
         if (fs::is_directory(dumpdir)) {
             for (auto& p : fs::recursive_directory_iterator(dumpdir)) {
                 if (p.path().extension() == ".dmp") {
-                    dumps.push_back(p.path().string());
+                    std::string done = p.path().string() + ".json";
+                    if (!fs::exists(done))
+                        dumps.push_back(p.path().string());
                 }
             }
         } else {
-            dumps.push_back(dumpdir);
+            fs::path dump(dumpdir);
+            if (dump.extension() == ".dmp") {
+                std::string done = dump.string() + ".json";
+                if (!fs::exists(done))
+                    dumps.push_back(dump.string());
+            }
         }
         // Parse minidump and post
         for (auto& dump : dumps) {
@@ -184,9 +194,13 @@ void UMSApi::postCrashData(const std::string& dumpdir)
             if (ret) {
                 std::uint32_t stamp = stacktraceJS["crash_info"]["time"].asUInt();
                 std::string time = Utility::timeDataStampToString(stamp);
-                manager.crashDataProceed(time, stacktraceJS.toStyledString());
-                std::string dump_bak = dump + ".bak";
-                fs::rename(dump, dump_bak);
+//                manager.crashDataProceed(time, stacktraceJS.toStyledString());
+                std::string done = dump + ".json";
+                std::ofstream ofs(done);
+                ofs << stacktraceJS.toStyledString();
+                ofs.close();
+            } else {
+                LOG(WARNING) << "process minidump failed";
             }
         }
 

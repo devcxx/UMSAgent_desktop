@@ -87,7 +87,7 @@ std::string Utility::getTime()
 
     std::time(&rawtime);
     timeinfo = std::localtime(&rawtime);
-    std::strftime(buffer, 80, "%Y-%m-%d-%H-%M-%S", timeinfo);
+    std::strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", timeinfo);
     return std::string(buffer);
 }
 
@@ -163,7 +163,7 @@ std::string Utility::timeDataStampToString(uint32_t timestamp)
     std::time_t tmp = timestamp;
     std::tm* t = std::gmtime(&tmp);
     std::stringstream ss;
-    ss << std::put_time(t, "%Y-%m-%d-%H-%M-%S");
+    ss << std::put_time(t, "%Y-%m-%d %H:%M:%S");
     std::string output = ss.str();
     return output;
 }
