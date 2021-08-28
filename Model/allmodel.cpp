@@ -69,7 +69,7 @@ Pushid AllModel::getPushidData(const std::string& pushid)
 ClientData AllModel::getClientData()
 {
     ClientData clientdata;
-    clientdata.platform = Utility::getKernelVariant();
+    clientdata.platform = Utility::getPlatform();
     clientdata.os_version = Utility::getOsVersion();
     // clientdata.language = ?
     clientdata.resolution = Utility::getResolution();
@@ -96,8 +96,8 @@ ErrorInfo AllModel::getErrorInfo(const std::string& time, const std::string& sta
     error.time = time;
     error.version = Utility::getApplicationVersion();
     error.deviceid = Utility::getDeviceName();
-    error.os_version = Utility::getOsVersion();
-    error.devicename = Utility::getKernelVariant();
+    error.os_version = Utility::getPlatform();
+    error.devicename = Utility::getDeviceName();
     ApplicationSettings settings;
     error.useridentifier = settings["UserIdentifier"];
     return error;

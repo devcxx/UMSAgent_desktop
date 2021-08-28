@@ -15,6 +15,7 @@ public:
     static std::string getOsVersion();
     static std::string getKernelVariant();
     static std::string getKernelVersion();
+    static std::string getPlatform();
     static std::string getResolution();
     static std::string getDeviceName();
     static std::string GetNetStates();

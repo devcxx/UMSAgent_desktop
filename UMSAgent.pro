@@ -134,7 +134,14 @@ win32 {
 }
 
 macos {
-    DEFINES += DARWIN
+    OBJECTIVE_HEADERS += Common/DarwinUtils.h
+    OBJECTIVE_HEADERS += Common/AutoPool.h
+    OBJECTIVE_SOURCES += Common/DarwinUtils.mm
+    OBJECTIVE_SOURCES += Common/AutoPool.mm
+}
+
+macos {
+    DEFINES += DARWIN TARGET_DARWIN TARGET_DARWIN_OSX
     INCLUDEPATH += $$PWD/ThirdParty/macos/jsoncons/include
     INCLUDEPATH += $$PWD/ThirdParty/macos/infoware/include
     INCLUDEPATH += $$PWD/ThirdParty/macos/restclient-cpp/include
@@ -144,6 +151,7 @@ macos {
     LIBS += -framework Security
     LIBS += -framework CoreGraphics
     LIBS += -framework SystemConfiguration
+    LIBS += -framework AppKit
 
     CONFIG(debug, debug|release) {
         LIBS += $$PWD/ThirdParty/macos/infoware/lib/libinfowared.a
