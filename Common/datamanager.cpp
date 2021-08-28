@@ -19,8 +19,6 @@ void DataManager::clientDataProceed()
     ClientData obj = model.getClientData();
     if (Utility::isNetWorkConnected()) {
         Post<ClientData> post(DataType::CLIENTDATA, obj);
-        //        std::function<void(DataType type, const std::string&, ClientData const&)> fn = &DataManager::getData<ClientData>;
-        //        post.stateChanged.Subscribe(&DataManager::getData<ClientData>);
         post.sendData(model.getUrl(DataType::CLIENTDATA));
     } else {
         FileSave::saveFile(DataType::CLIENTDATA, obj);

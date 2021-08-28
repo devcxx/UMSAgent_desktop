@@ -115,14 +115,15 @@ win32 {
         LIBS += -L$$PWD/ThirdParty/win32/jsoncpp/lib/debug jsoncpp_static.lib
         LIBS += -L$$PWD/ThirdParty/win32/curl/lib libcurl.lib
         LIBS += -L$$PWD/ThirdParty/win32/restclient-cpp/lib restclient-cppd.lib
-        LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/debug common.lib
         LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/debug processor.lib
         LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/debug libdisasm.lib
     } else {
         LIBS += -L$$PWD/ThirdParty/win32/infoware/lib infoware.lib
-        LIBS += -L$$PWD/ThirdParty/win32/jsoncpp/lib jsoncpp.lib
         LIBS += -L$$PWD/ThirdParty/win32/curl/lib libcurl.lib
+        LIBS += -L$$PWD/ThirdParty/win32/jsoncpp/lib/release jsoncpp_static.lib
         LIBS += -L$$PWD/ThirdParty/win32/restclient-cpp/lib restclient-cpp.lib
+        LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/release libdisasm.lib
+        LIBS += -L$$PWD/ThirdParty/win32/breakpad/lib/release processor.lib
     }
 
     LIBS += -lgdi32 -lversion -lOle32 -lOleAut32 -lwbemuuid -lkernel32 -luser32 -lwinspool -lshell32 -lole32 -luuid -lcomdlg32 -ladvapi32
