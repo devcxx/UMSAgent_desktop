@@ -271,6 +271,7 @@ std::string Utility::GetMachineGuid()
     }
 #elif defined(__APPLE__)
     // Use the hardware UUID available on OSX to identify this machine
+    uuid_t id;
     // wait at most 5 seconds for gethostuuid to return
     const timespec wait = {5, 0};
     if (gethostuuid(id, &wait) == 0) {
