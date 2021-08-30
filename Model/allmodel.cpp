@@ -80,7 +80,7 @@ ClientData AllModel::getClientData()
     clientdata.time = Utility::getTime();
     ApplicationSettings settings;
     clientdata.useridentifier = settings["UserIdentifier"];
-
+    clientdata.language = Utility::getApplicationLanguage();
     // clientdata.userid
     clientdata.isMobileDevice = false;
     clientdata.network = Utility::GetNetStates();
@@ -95,7 +95,7 @@ ErrorInfo AllModel::getErrorInfo(const std::string& time, const std::string& sta
     error.stacktrace = stacktrace;
     error.time = time;
     error.version = Utility::getApplicationVersion();
-    error.deviceid = Utility::getDeviceName();
+    error.deviceid = Utility::getDeviceId();
     error.os_version = Utility::getPlatform();
     error.devicename = Utility::getDeviceName();
     ApplicationSettings settings;

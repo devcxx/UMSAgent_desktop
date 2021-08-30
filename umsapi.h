@@ -1,8 +1,15 @@
 #ifndef UMSAPI_H
 #define UMSAPI_H
 
-#include "UMSAgent_global.h"
 #include <string>
+
+#if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) || defined(__WIN64__) || defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#define UMSAGENT_EXPORT __declspec(dllexport)
+#define UMSAGENT_IMPORT __declspec(dllimport)
+#else
+#define UMSAGENT_EXPORT __attribute__((visibility("default")))
+#define UMSAGENT_IMPORT __attribute__((visibility("default")))
+#endif
 
 namespace UMSApi {
 enum class DataType {
@@ -26,6 +33,7 @@ UMSAGENT_EXPORT void onAppStart(const std::string& appKey, const std::string& ur
 // bind user id
 UMSAGENT_EXPORT void bindUserIdentifier(const std::string& userid);
 UMSAGENT_EXPORT void bindApplicationVersion(const std::string& version);
+UMSAGENT_EXPORT void bindApplicationLanguage(const std::string& language);
 
 //post clientdata and all data
 UMSAGENT_EXPORT void postClientdata();

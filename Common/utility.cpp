@@ -67,6 +67,7 @@ static const char* kernelVariantName(iware::system::kernel_t variant) noexcept
 namespace UMSAgent {
 
 std::string Utility::appVersion;
+std::string Utility::appLanguage;
 
 Utility::Utility()
 {
@@ -199,6 +200,11 @@ std::string Utility::getApplicationVersion()
     return appVersion;
 }
 
+std::string Utility::getApplicationLanguage()
+{
+    return appLanguage;
+}
+
 int64_t Utility::getNowTicks()
 {
     std::chrono::time_point<std::chrono::system_clock> now =
@@ -221,6 +227,11 @@ std::string Utility::timeDataStampToString(uint32_t timestamp)
 void Utility::setApplicationVersion(const std::string& version)
 {
     appVersion = version;
+}
+
+void Utility::setApplicationLanguage(const std::string &language)
+{
+    appLanguage = language;
 }
 
 #ifdef _WIN32

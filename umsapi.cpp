@@ -60,7 +60,7 @@ static bool isAppkeyValid(const std::string& appkey)
 void UMSApi::onAppStart(const std::string& appKey, const std::string& url)
 {
     if (isAppkeyValid(appKey)) {
-        initLogger();
+//        initLogger();
         Constants::kBaseUrl = url;
         UmsManager::getInstance().appkey = appKey;
         UmsManager::getInstance().init();
@@ -212,4 +212,9 @@ void UMSApi::updateOnlineConfig()
     pool.enqueue([]{
         manager.onlineConfigProceed();
     });
+}
+
+void UMSApi::bindApplicationLanguage(const std::string &language)
+{
+    Utility::setApplicationLanguage(language);
 }
