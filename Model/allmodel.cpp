@@ -79,7 +79,7 @@ ClientData AllModel::getClientData()
     clientdata.appkey = UmsManager::getInstance().appkey;
     clientdata.time = Utility::getTime();
     ApplicationSettings settings;
-    clientdata.userid = settings["UserIdentifier"];
+    clientdata.useridentifier = settings["UserIdentifier"];
 
     // clientdata.userid
     clientdata.isMobileDevice = false;

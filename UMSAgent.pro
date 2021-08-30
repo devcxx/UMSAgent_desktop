@@ -107,6 +107,9 @@ DESTDIR = $$PWD/bin
 win32 {
     DEFINES += XP_WIN XP_WIN32
 
+    HEADERS += Common/registry.h
+    SOURCES += Common/registry.cc
+
     INCLUDEPATH += $$PWD/ThirdParty/win32/infoware/include
     INCLUDEPATH += $$PWD/ThirdParty/win32/jsoncons/include
     INCLUDEPATH += $$PWD/ThirdParty/win32/jsoncpp/include

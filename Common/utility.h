@@ -23,6 +23,7 @@ public:
     static std::int64_t getNowTicks();
     static std::string timeDataStampToString(std::uint32_t timestamp);
     static void setApplicationVersion(const std::string& version);
+    static std::string GetMachineGuid();
     static std::string appVersion;
 };
 }

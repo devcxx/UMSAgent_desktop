@@ -7,14 +7,17 @@
 #include <sstream>
 #include <chrono>
 #include <iomanip>
+#include "easylogging++.h"
 
 #if defined(_WIN32) || defined(__MINGW32__) || defined(__CYGWIN__)
 #include <windows.h>
 #include <wininet.h>
+#include "registry.h"
 #pragma comment(lib, "Wininet.lib")
 #elif defined(__APPLE__)
 #include <objc/objc.h>
 #include <SystemConfiguration/SystemConfiguration.h>
+#include "DarwinUtils.h"
 #endif
 
 static bool IsNetConnected()
@@ -76,8 +79,9 @@ bool Utility::isNetWorkConnected()
 
 std::string Utility::getDeviceId()
 {
-    std::uint64_t machHash = std::hash<std::string>{}(machineid::machineHash());
-    return std::to_string(machHash);
+//    std::uint64_t machHash = std::hash<std::string>{}(machineid::machineHash());
+//    return std::to_string(machHash);
+    return GetMachineGuid();
 }
 
 std::string Utility::getTime()
@@ -118,7 +122,6 @@ static bool sysGetVersionExWByRef(OSVERSIONINFOEXW& osVerInfo)
 #endif
 
 #if defined (__APPLE__)
-#include "DarwinUtils.h"
 extern "C" const char *GetOSXVersionString(void);
 extern "C" const char *GetSystemMachineName(void);
 #endif
@@ -129,7 +132,7 @@ std::string Utility::getOsVersion()
     std::ostringstream oss;
     OSVERSIONINFOEXW osvi;
     sysGetVersionExWByRef(osvi);
-    oss << osvi.dwMajorVersion << osvi.dwMinorVersion;
+    oss << osvi.dwMajorVersion << '.' << osvi.dwMinorVersion;
     return oss.str();
 #elif defined (__APPLE__)
     const char* osVersion = GetOSXVersionString();
@@ -179,7 +182,7 @@ std::string Utility::getDeviceName()
 #if defined(_WIN32)
     CHAR computerName[_MAX_PATH] = { 0 };
     DWORD arrayLength = _MAX_PATH*sizeof(CHAR);
-    GetComputerNameExA(ComputerNameNetBIOS, computerName, &arrayLength);
+    GetComputerNameExA(ComputerNameDnsFullyQualified, computerName, &arrayLength);
     return computerName;
 #elif defined(__APPLE__)
     return GetSystemMachineName();
@@ -218,5 +221,64 @@ std::string Utility::timeDataStampToString(uint32_t timestamp)
 void Utility::setApplicationVersion(const std::string& version)
 {
     appVersion = version;
+}
+
+#ifdef _WIN32
+const char kMicrosoftCryptographyRegKey[] =
+    "SOFTWARE\\Microsoft\\Cryptography";
+const char kMicrosoftCryptographyMachineGuidRegKey[] = "MachineGuid";
+
+typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+LPFN_ISWOW64PROCESS fnIsWow64Process;
+BOOL IsWow64()
+{
+    BOOL bIsWow64 = FALSE;
+    //IsWow64Process is not available on all supported versions of Windows.
+    //Use GetModuleHandle to get a handle to the DLL that contains the function
+    //and GetProcAddress to get a pointer to the function if available.
+    fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
+        GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
+
+    if(NULL != fnIsWow64Process)
+    {
+        if (!fnIsWow64Process(GetCurrentProcess(),&bIsWow64))
+        {
+            //handle error
+        }
+    }
+    return bIsWow64;
+}
+#endif
+
+std::string Utility::GetMachineGuid()
+{
+    std::string machineGuid;
+#if defined (WIN32)
+    RegKey key;
+    // !!!NOTE 32bit application MUST add
+    ACCESS_MASK access = KEY_READ;
+    if (IsWow64())
+        access |= KEY_WOW64_64KEY;
+
+    LONG sts = key.Open(HKEY_LOCAL_MACHINE, kMicrosoftCryptographyRegKey, access);
+    if (sts == ERROR_SUCCESS) {
+//        char machine_guid_buffer[64];
+//        ULONG guid_length = sizeof(char)*64;
+//        DWORD type;
+//        ULONG local_length = (guid_length - 1) * sizeof(decltype(machine_guid_buffer[0]));
+        sts = key.ReadValue(kMicrosoftCryptographyMachineGuidRegKey, &machineGuid);
+
+    }
+#elif defined(__APPLE__)
+    // Use the hardware UUID available on OSX to identify this machine
+    // wait at most 5 seconds for gethostuuid to return
+    const timespec wait = {5, 0};
+    if (gethostuuid(id, &wait) == 0) {
+        char out[128] = {0};
+        uuid_unparse(id, out);
+        machineGuid = std::string(out);
+    }
+#endif
+    return machineGuid;
 }
 }
