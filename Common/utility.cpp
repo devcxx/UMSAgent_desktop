@@ -126,6 +126,7 @@ static bool sysGetVersionExWByRef(OSVERSIONINFOEXW& osVerInfo)
 #if defined (__APPLE__)
 extern "C" const char *GetOSXVersionString(void);
 extern "C" const char *GetSystemMachineName(void);
+extern "C" const char *GetDeviceModel(void);
 #endif
 
 std::string Utility::getOsVersion()
@@ -304,6 +305,7 @@ std::string Utility::GetComputerModel()
     WMIDetect::Query(table, wcol, model);
 
 #elif defined(__APPLE__)
+    return GetDeviceModel();
 #endif
     return model;
 }

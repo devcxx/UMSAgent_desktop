@@ -35,6 +35,7 @@
 #import <IOKit/ps/IOPSKeys.h>
 #import <IOKit/ps/IOPowerSources.h>
 #import <SystemConfiguration/SystemConfiguration.h>
+#import "AppleDevice.h"
 #endif
 
 #import "AutoPool.h"
@@ -575,4 +576,11 @@ const char* GetSystemMachineName()
     CCocoaAutoPool pool;
     CFStringRef _name = SCDynamicStoreCopyComputerName(NULL, NULL);
     return [(NSString*)_name UTF8String];
+}
+
+const char *GetDeviceModel()
+{
+    CCocoaAutoPool pool;
+    NSString* deviceModel =  [AppleDevice currentDevice].deviceModel;
+    return [(NSString*)deviceModel UTF8String];
 }

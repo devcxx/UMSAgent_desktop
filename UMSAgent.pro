@@ -143,6 +143,8 @@ macos {
     OBJECTIVE_HEADERS += Common/AutoPool.h
     OBJECTIVE_SOURCES += Common/DarwinUtils.mm
     OBJECTIVE_SOURCES += Common/AutoPool.mm
+    OBJECTIVE_HEADERS += Common/AppleDevice.h
+    OBJECTIVE_SOURCES += Common/AppleDevice.m
 }
 
 macos {

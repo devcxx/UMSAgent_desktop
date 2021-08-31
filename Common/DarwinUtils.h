@@ -42,6 +42,7 @@ const char *GetSystemMachineName(void);
 const char *GetOSXVersionString(void);
 int         GetExecutablePath(char* path, uint32_t *pathsize);
 const char *GetAppRootFolder(void);
+const char *GetDeviceModel();
 bool        IsIosSandboxed(void);
 int         BatteryLevel(void);
 void        PrintDebugString(std::string debugString);
