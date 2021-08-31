@@ -81,12 +81,11 @@ void Session::onPageEnd(const std::string& pagename)
         pageInfo.appkey = UmsManager::getInstance().appkey;
         pageInfo.duration = std::to_string(duration);
         pageInfo.end_millis = Utility::getTime();
-        std::int64_t startMillis = nonstd::get<std::int64_t>(pageDictionary[pagename+"starttime"]);
-        pageInfo.start_millis = std::to_string(startMillis);
+        std::string startMillis = nonstd::get<std::string>(pageDictionary[pagename+"starttime"]);
+        pageInfo.start_millis = startMillis;
         pageInfo.version = Utility::getApplicationVersion();
         pageInfo.activities = pagename;
         pageInfo.session_id = UMS_SESSION_ID;
-        DataManager::getInstance().appkey = UmsManager::getInstance().appkey;
         DataManager::getInstance().pageInfoDataProceed(pageInfo);
     }
 }
