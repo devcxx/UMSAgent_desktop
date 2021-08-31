@@ -159,9 +159,9 @@ std::string Utility::getKernelVersion()
 std::string Utility::getPlatform()
 {
 #if defined(_WIN32)
-    return "Windows";
+    return "windows";
 #elif defined (__APPLE__)
-    return "MacOS";
+    return "mac";
 #endif
 }
 
