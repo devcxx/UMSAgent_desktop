@@ -22,6 +22,10 @@ void FileSave::saveFile(DataType type, T const& obj) {
         std::string json = settings[key];
         std::vector<T> list = jsoncons::decode_json<std::vector<T>>(json);
         list.push_back(obj);
+        std::string newjson;
+        jsoncons::encode_json<std::vector<T>>(list, newjson);
+        settings.Set(key, newjson);
+
     } else {
         std::vector<T> list { obj };
         std::string json;

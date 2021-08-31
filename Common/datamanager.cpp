@@ -29,7 +29,7 @@ void DataManager::eventDataProceed(const std::string& eventid, const std::string
 {
     Event obj = model.getEventInfo(eventid, pagename, lable, acc);
     if (Utility::isNetWorkConnected()) {
-        Post<Event> post(DataType::ERRORDATA, obj);
+        Post<Event> post(DataType::EVENTDATA, obj);
         post.sendData(model.getUrl(DataType::EVENTDATA));
     } else {
         FileSave::saveFile(DataType::EVENTDATA, obj);
