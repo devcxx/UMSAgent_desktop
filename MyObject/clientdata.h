@@ -22,12 +22,14 @@ struct ClientData {
     std::string latitude;
     std::string longitude;
     std::string useridentifier;
+    std::string modulename;
+    std::string sessionId;
 };
 
 }
 JSONCONS_ALL_MEMBER_TRAITS(UMSAgent::ClientData, platform, os_version, language,
     resolution, deviceid, isMobileDevice, devicename,
     defaultbrowser, network, version, time,
-    appkey, latitude, longitude, useridentifier)
+    appkey, latitude, longitude, useridentifier, modulename, sessionId)
 
 #endif // CLIENTDATA_H

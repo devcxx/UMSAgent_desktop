@@ -10,14 +10,19 @@ Dialog::Dialog(QWidget *parent)
 {
     ui->setupUi(this);
 
-    UMSApi::onAppStart(kAppKey, kUmsURL);
-    UMSApi::bindUserIdentifier("DESKTOP-CJE7V2F");
+    UMSApi::onAppStart(kAppKey, "");
+    UMSApi::bindUserIdentifier("devcxx");
+    UMSApi::bindApplicationLanguage("CN");
+    UMSApi::bindApplicationVersion("1.0.0");
 //    UMSApi::postPushid("Desktop test push");
     UMSApi::postClientdata();
 //    UMSApi::updateOnlineConfig();
     UMSApi::onEvent("start", "Dialog");
+    UMSApi::onPageBegin("pageTest1");
     QString dumpDir = QApplication::applicationDirPath() + "/minidump";
     UMSApi::postCrashData(dumpDir.toStdString());
+
+    UMSApi::onPageEnd("pageTest1");
 
 }
 

@@ -26,6 +26,7 @@ public:
     static void setApplicationVersion(const std::string& version);
     static void setApplicationLanguage(const std::string& language);
     static std::string GetMachineGuid();
+    static std::string GetComputerModel();
     static std::string appVersion;
     static std::string appLanguage;
 };

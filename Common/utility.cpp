@@ -13,6 +13,7 @@
 #include <windows.h>
 #include <wininet.h>
 #include "registry.h"
+#include "wmidetect.h"
 #pragma comment(lib, "Wininet.lib")
 #elif defined(__APPLE__)
 #include <objc/objc.h>
@@ -292,5 +293,18 @@ std::string Utility::GetMachineGuid()
     }
 #endif
     return machineGuid;
+}
+
+std::string Utility::GetComputerModel()
+{
+    std::string model;
+#if defined (WIN32)
+    std::string table = "Win32_computersystem";
+    std::wstring wcol = L"SystemFamily";
+    WMIDetect::Query(table, wcol, model);
+
+#elif defined(__APPLE__)
+#endif
+    return model;
 }
 }

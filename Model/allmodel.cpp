@@ -80,10 +80,12 @@ ClientData AllModel::getClientData()
     clientdata.time = Utility::getTime();
     ApplicationSettings settings;
     clientdata.useridentifier = settings["UserIdentifier"];
+    clientdata.sessionId = settings["cobub_session_id"];
     clientdata.language = Utility::getApplicationLanguage();
     // clientdata.userid
     clientdata.isMobileDevice = false;
     clientdata.network = Utility::GetNetStates();
+    clientdata.modulename = Utility::GetComputerModel();
     clientdata.defaultbrowser = "";
     return clientdata;
 }
