@@ -18,7 +18,8 @@ Event AllModel::getEventInfo(const std::string& eventid, const std::string& page
     e.activity = UrlEncodeString(pagename);
     e.time = Utility::getTime();
     e.appkey = UmsManager::getInstance().appkey;
-    e.label = UrlEncodeString(label);
+//    e.label = UrlEncodeString(label);
+    e.label = label;
     e.version = Utility::getApplicationVersion();
     e.acc = acc;
     return e;
