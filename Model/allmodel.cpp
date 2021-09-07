@@ -22,6 +22,11 @@ Event AllModel::getEventInfo(const std::string& eventid, const std::string& page
     e.label = label;
     e.version = Utility::getApplicationVersion();
     e.acc = acc;
+    e.deviceid = Utility::getDeviceId();
+    e.productkey = UmsManager::getInstance().appkey;
+    ApplicationSettings settings;
+    e.useridentifier = settings["UserIdentifier"];
+    e.sessionId = settings["cobub_session_id"];
     return e;
 }
 

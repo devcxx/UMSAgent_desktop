@@ -13,10 +13,14 @@ struct Event {
     std::string appkey;
     std::string version;
     int acc;
+    std::string deviceid;
+    std::string productkey;
+    std::string sessionId;
+    std::string useridentifier;
 };
 }
 
 JSONCONS_ALL_MEMBER_TRAITS(UMSAgent::Event, event_identifier,
-    time, activity, label, appkey, version, acc)
+    time, activity, label, appkey, version, acc, deviceid, productkey, sessionId, useridentifier)
 
 #endif // EVENT_H
