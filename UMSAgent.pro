@@ -109,8 +109,12 @@ win32 {
 
     HEADERS += Common/registry.h
     SOURCES += Common/registry.cc
-    HEADERS += Common/wmidetect.h
-    SOURCES += Common/wmidetect.cpp
+    HEADERS += WMI/wmi.hpp
+    HEADERS += WMI/wmiclasses.hpp
+    HEADERS += WMI/wmiexception.hpp
+    HEADERS += WMI/wmiresult.hpp
+    SOURCES += WMI/wmi.cpp
+    SOURCES += WMI/wmiresult.cpp
 
     INCLUDEPATH += $$PWD/ThirdParty/win32/infoware/include
     INCLUDEPATH += $$PWD/ThirdParty/win32/jsoncons/include

@@ -13,7 +13,9 @@
 #include <windows.h>
 #include <wininet.h>
 #include "registry.h"
-#include "wmidetect.h"
+#include "WMI/wmi.hpp"
+#include "WMI/wmiclasses.hpp"
+#include "WMI/unistd.h"
 #pragma comment(lib, "Wininet.lib")
 #elif defined(__APPLE__)
 #include <objc/objc.h>
@@ -282,6 +284,16 @@ std::string Utility::GetMachineGuid()
         sts = key.ReadValue(kMicrosoftCryptographyMachineGuidRegKey, &machineGuid);
 
     }
+
+    if (machineGuid.empty()) {
+        try {
+            Wmi::Win32_ComputerSystemProduct product = Wmi::retrieveWmi<Wmi::Win32_ComputerSystemProduct>();
+            machineGuid = product.UUID;
+        }  catch (const Wmi::WmiException& ex) {
+            LOG(ERROR) << "Wmi error: "<<ex.errorMessage<<", Code: "<<ex.hexErrorCode();
+        }
+    }
+
 #elif defined(__APPLE__)
     // Use the hardware UUID available on OSX to identify this machine
     uuid_t id;
@@ -300,9 +312,12 @@ std::string Utility::GetComputerModel()
 {
     std::string model;
 #if defined (WIN32)
-    std::string table = "Win32_computersystem";
-    std::wstring wcol = L"SystemFamily";
-    WMIDetect::Query(table, wcol, model);
+    try {
+        Wmi::Win32_ComputerSystemProduct product = Wmi::retrieveWmi<Wmi::Win32_ComputerSystemProduct>();
+        model = product.Version;
+    } catch (const Wmi::WmiException& ex) {
+        LOG(ERROR) << "Wmi error: "<<ex.errorMessage<<", Code: "<<ex.hexErrorCode();
+    }
 
 #elif defined(__APPLE__)
     return GetDeviceModel();
