@@ -72,9 +72,9 @@ void DataManager::allDataProceed()
     }
 }
 
-void DataManager::crashDataProceed(const std::string& time, const std::string& stacktrace)
+void DataManager::crashDataProceed(const std::string& time, const std::string& stacktrace, const std::string& attachment)
 {
-    ErrorInfo obj = model.getErrorInfo(time, stacktrace);
+    ErrorInfo obj = model.getErrorInfo(time, stacktrace, attachment);
     if (Utility::isNetWorkConnected()) {
         Post<ErrorInfo> post(DataType::ERRORDATA, obj);
         post.sendData(model.getUrl(DataType::ERRORDATA));

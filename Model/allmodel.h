@@ -28,7 +28,7 @@ public:
     Pushid getPushidData(const std::string& pushid);
     //get client data
     ClientData getClientData();
-    ErrorInfo getErrorInfo(const std::string& time, const std::string& stacktrace);
+    ErrorInfo getErrorInfo(const std::string& time, const std::string& stacktrace, const std::string& attachment = "");
     std::string getUrl(DataType type);
 
     std::string key;

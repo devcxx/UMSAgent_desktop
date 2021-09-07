@@ -28,6 +28,7 @@ SOURCES += \
     Common/easylogging++.cc \
 #    Common/ConvertUTF.c \
     Common/guid.cpp \
+    Common/uploader.cpp \
     Model/allmodel.cpp \
     Model/deviceinfo.cpp \
     Model/session.cpp \
@@ -60,6 +61,7 @@ HEADERS += \
     Common/utility.h \
     Common/machineid.h \
     Common/easylogging++.h \
+    Common/uploader.h \
 #    Common/ConvertUTF.h \
 #    Common/SimpleIni.h \
     Common/guid.hpp \

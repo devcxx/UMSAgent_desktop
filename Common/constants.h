@@ -16,6 +16,7 @@ namespace Constants {
     extern std::string kPostTag;
     extern std::string kPostUserid;
     extern std::string kPostPushid;
+    extern std::string kUpload;
 }
 }
 

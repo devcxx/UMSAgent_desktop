@@ -6,6 +6,7 @@
 #include "CrashReporter/minidump-analyzer.h"
 #include "UMS/umsmanager.h"
 #include "Common/ThreadPool.h"
+#include "Common/uploader.h"
 
 #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (defined(__cplusplus) && __cplusplus >= 201703L)) && defined(__has_include)
 #if __has_include(<filesystem>) && (!defined(__MAC_OS_X_VERSION_MIN_REQUIRED) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500)
@@ -194,11 +195,18 @@ void UMSApi::postCrashData(const std::string& dumpdir)
             if (ret) {
                 std::uint32_t stamp = stacktraceJS["crash_info"]["time"].asUInt();
                 std::string time = Utility::timeDataStampToString(stamp);
-                manager.crashDataProceed(time, stacktraceJS.toStyledString());
-                std::string done = dump + ".json";
-                std::ofstream ofs(done);
-                ofs << stacktraceJS.toStyledString();
-                ofs.close();
+                std::string filename = fs::path(dump).filename().string();
+                manager.crashDataProceed(time, stacktraceJS.toStyledString(), filename);
+
+                // Upload dump file to server
+                std::string uploadUrl = Constants::kBaseUrl + Constants::kUpload;
+                if (Uploader::upload(uploadUrl, dump)) {
+                    std::string done = dump + ".json";
+                    std::ofstream ofs(done);
+                    ofs << stacktraceJS.toStyledString();
+                    ofs.close();
+                }
+
             } else {
                 LOG(WARNING) << "process minidump failed";
             }

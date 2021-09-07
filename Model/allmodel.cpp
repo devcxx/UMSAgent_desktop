@@ -91,7 +91,7 @@ ClientData AllModel::getClientData()
     return clientdata;
 }
 
-ErrorInfo AllModel::getErrorInfo(const std::string& time, const std::string& stacktrace)
+ErrorInfo AllModel::getErrorInfo(const std::string& time, const std::string& stacktrace, const std::string& attachment)
 {
     ErrorInfo error;
     error.appkey = UmsManager::getInstance().appkey;
@@ -101,6 +101,7 @@ ErrorInfo AllModel::getErrorInfo(const std::string& time, const std::string& sta
     error.deviceid = Utility::getDeviceId();
     error.os_version = Utility::getPlatform();
     error.devicename = Utility::getDeviceName();
+    error.filename = attachment;
     ApplicationSettings settings;
     error.useridentifier = settings["UserIdentifier"];
     return error;

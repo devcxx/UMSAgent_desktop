@@ -13,5 +13,6 @@ namespace Constants {
     std::string kPostTag = "/tag";
     std::string kPostUserid = "/userid";
     std::string kPostPushid = "/pushid";
+    std::string kUpload = "/upload";
 }
 }
