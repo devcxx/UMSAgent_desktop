@@ -25,6 +25,7 @@ public:
     static std::string timeDataStampToString(std::uint32_t timestamp);
     static void setApplicationVersion(const std::string& version);
     static void setApplicationLanguage(const std::string& language);
+    static std::string getDefaultBrowser();
     static std::string GetMachineGuid();
     static std::string GetComputerModel();
     static std::string appVersion;

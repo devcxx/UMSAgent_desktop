@@ -92,7 +92,7 @@ ClientData AllModel::getClientData()
     clientdata.isMobileDevice = false;
     clientdata.network = Utility::GetNetStates();
     clientdata.modulename = Utility::GetComputerModel();
-    clientdata.defaultbrowser = "";
+    clientdata.defaultbrowser = Utility::getDefaultBrowser();
     return clientdata;
 }
 

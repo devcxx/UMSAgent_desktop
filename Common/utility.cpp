@@ -12,11 +12,13 @@
 #if defined(_WIN32) || defined(__MINGW32__) || defined(__CYGWIN__)
 #include <windows.h>
 #include <wininet.h>
+#include <Shlwapi.h>
 #include "registry.h"
 #include "WMI/wmi.hpp"
 #include "WMI/wmiclasses.hpp"
 #include "WMI/unistd.h"
 #pragma comment(lib, "Wininet.lib")
+#pragma comment(lib, "shlwapi.lib")
 #elif defined(__APPLE__)
 #include <objc/objc.h>
 #include <SystemConfiguration/SystemConfiguration.h>
@@ -236,6 +238,20 @@ void Utility::setApplicationVersion(const std::string& version)
 void Utility::setApplicationLanguage(const std::string &language)
 {
     appLanguage = language;
+}
+
+std::string Utility::getDefaultBrowser()
+{
+    std::string browser;
+#if defined(_WIN32)
+    CHAR szBrowser[MAX_PATH];
+    DWORD cch = MAX_PATH;
+    AssocQueryStringA(ASSOCF_NONE, ASSOCSTR_FRIENDLYAPPNAME, "http", NULL, szBrowser, &cch);
+    return szBrowser;
+
+#elif defined(__APPLE__)
+#endif
+    return browser;
 }
 
 #ifdef _WIN32
