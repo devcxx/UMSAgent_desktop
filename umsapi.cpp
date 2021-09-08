@@ -226,3 +226,8 @@ void UMSApi::bindApplicationLanguage(const std::string &language)
 {
     Utility::setApplicationLanguage(language);
 }
+
+void UMSApi::bindBaseUrl(const std::string &url)
+{
+    Constants::kBaseUrl = url;
+}
