@@ -52,6 +52,7 @@ const std::string&  GetManufacturer(void);
 bool        IsAliasShortcut(const std::string& path);
 void        TranslateAliasShortcut(std::string& path);
 bool        CreateAliasShortcut(const std::string& fromPath, const std::string& toPath);
+const char *GetDefaultBrowser();
 
 
 }

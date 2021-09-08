@@ -29,13 +29,13 @@
 #import <mach/mach_host.h>
 #import <sys/sysctl.h>
 #else
+#import "AppleDevice.h"
 #import <Cocoa/Cocoa.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <IOKit/IOKitLib.h>
 #import <IOKit/ps/IOPSKeys.h>
 #import <IOKit/ps/IOPowerSources.h>
 #import <SystemConfiguration/SystemConfiguration.h>
-#import "AppleDevice.h"
 #endif
 
 #import "AutoPool.h"
@@ -578,9 +578,18 @@ const char* GetSystemMachineName()
     return [(NSString*)_name UTF8String];
 }
 
-const char *GetDeviceModel()
+const char* GetDeviceModel()
 {
     CCocoaAutoPool pool;
-    NSString* deviceModel =  [AppleDevice currentDevice].deviceModel;
+    NSString* deviceModel = [AppleDevice currentDevice].deviceModel;
     return [(NSString*)deviceModel UTF8String];
+}
+
+const char* GetDefaultBrowser()
+{
+    CCocoaAutoPool pool;
+    NSString* handler = (__bridge NSString*)LSCopyDefaultHandlerForURLScheme(
+        (__bridge CFStringRef) @"http");
+    NSString* appName = [[handler componentsSeparatedByString:@"."] lastObject];
+    return [(NSString*)appName UTF8String];
 }

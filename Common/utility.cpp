@@ -131,6 +131,7 @@ static bool sysGetVersionExWByRef(OSVERSIONINFOEXW& osVerInfo)
 extern "C" const char *GetOSXVersionString(void);
 extern "C" const char *GetSystemMachineName(void);
 extern "C" const char *GetDeviceModel(void);
+extern "C" const char *GetDefaultBrowser(void);
 #endif
 
 std::string Utility::getOsVersion()
@@ -250,6 +251,7 @@ std::string Utility::getDefaultBrowser()
     return szBrowser;
 
 #elif defined(__APPLE__)
+    browser = GetDefaultBrowser();
 #endif
     return browser;
 }
