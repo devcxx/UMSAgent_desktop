@@ -6,6 +6,7 @@
 #include "../Common/obj2json.h"
 #include "../MyObject/commonret.h"
 #include <restclient-cpp/restclient.h>
+#include <restclient-cpp/connection.h>
 #include "../Common/ThreadPool.h"
 #include "../Common/Delegate.hpp"
 #include "../Common/filesave.h"
@@ -28,7 +29,6 @@ public:
     T obj;
     std::string ret;
     DataType type;
-    ThreadPool pool{5};
 //    Delegate::Delegate<void(const DataType&, const std::string&, const std::string&)> stateChanged;
 };
 
@@ -41,7 +41,15 @@ template<class T>
 void Post<T>::sendData(const std::string &url)
 {
     std::string data = "content={\"data\":[" + message+ "]}";
-    RestClient::Response r = RestClient::post(url, "application/x-www-form-urlencoded", data);
+    std::string ctype = "application/x-www-form-urlencoded";
+    RestClient::Response r;
+    RestClient::Connection *conn = new RestClient::Connection("");
+    // set connection timeout to 5s
+    conn->SetTimeout(5);
+    conn->AppendHeader("Content-Type", ctype);
+    r = conn->post(url, data);
+    delete conn;
+
     CommonRet errorRet;
     errorRet.flag = std::to_string(r.code);
     errorRet.msg = r.body;
