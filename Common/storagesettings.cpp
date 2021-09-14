@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <memory>
+#include <sys/stat.h>
 
 namespace UMSAgent {
 
