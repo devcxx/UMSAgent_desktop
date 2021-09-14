@@ -49,7 +49,8 @@ SOURCES += \
     MyObject/userrepolicy.cpp \
     UMS/umsmanager.cpp \
     umsagent.cpp \
-    umsapi.cpp
+    umsapi.cpp \
+    umsutility.cpp
 
 HEADERS += \
     Common/Singleton.h \
@@ -90,7 +91,8 @@ HEADERS += \
     MyObject/commonret.h \
     MyObject/pageinfo.h \
     umsagent.h \
-    umsapi.h
+    umsapi.h \
+    umsutility.h
 
 HEADERS += \
     CrashReporter/MinidumpAnalyzerUtils.h \
