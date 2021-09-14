@@ -1,12 +1,13 @@
 #include "umsapi.h"
+#include "Common/ThreadPool.h"
 #include "Common/constants.h"
 #include "Common/datamanager.h"
 #include "Common/easylogging++.h"
+#include "Common/storagesettings.h"
+#include "Common/uploader.h"
 #include "Common/utility.h"
 #include "CrashReporter/minidump-analyzer.h"
 #include "UMS/umsmanager.h"
-#include "Common/ThreadPool.h"
-#include "Common/uploader.h"
 
 #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (defined(__cplusplus) && __cplusplus >= 201703L)) && defined(__has_include)
 #if __has_include(<filesystem>) && (!defined(__MAC_OS_X_VERSION_MIN_REQUIRED) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500)
@@ -37,8 +38,8 @@ static void initLogger()
     c.setToDefault();
     c.setGlobally(el::ConfigurationType::MaxLogFileSize, "2097152");
     c.setGlobally(ConfigurationType::Format, "%datetime %level: %msg");
-    c.setGlobally(ConfigurationType::ToFile, "false");
-    c.setGlobally(ConfigurationType::ToStandardOutput, "false");
+    c.setGlobally(ConfigurationType::ToFile, "true");
+    c.setGlobally(ConfigurationType::ToStandardOutput, "true");
     c.setGlobally(ConfigurationType::Filename, "UMSAgent.log");
     Loggers::reconfigureLogger("default", c);
     Loggers::addFlag(el::LoggingFlag::AutoSpacing);
@@ -52,23 +53,25 @@ static void registerEvent()
 static bool isAppkeyValid(const std::string& appkey)
 {
     if (appkey.empty()) {
-        LOG(ERROR) << "appkey is invalid!";
         return false;
     }
     return true;
 }
 
-void UMSApi::onAppStart(const std::string& appKey, const std::string& url)
+void UMSApi::onAppStart(const std::string& appKey)
 {
-    if (isAppkeyValid(appKey)) {
-//        initLogger();
-        Constants::kBaseUrl = url;
+    initLogger();
+    ApplicationSettings settings;
+    if (isAppkeyValid(appKey) && settings.Contains("url")) {
+        Constants::kBaseUrl = settings["url"];
         UmsManager::getInstance().appkey = appKey;
         UmsManager::getInstance().init();
         registerEvent();
         manager.appkey = appKey;
         device_resolution = Utility::getResolution();
         isValidKey = true;
+    } else {
+        LOG(ERROR) << "invalid appkey or url";
     }
 }
 
@@ -89,9 +92,9 @@ void UMSApi::bindApplicationVersion(const std::string& version)
 void UMSApi::postClientdata()
 {
     if (isValidKey) {
-        pool.enqueue([]{
+        pool.enqueue([] {
             manager.clientDataProceed();
-            manager.allDataProceed();
+//            manager.allDataProceed();
         });
     } else {
         LOG(ERROR) << "not valid appkey!";
@@ -100,31 +103,34 @@ void UMSApi::postClientdata()
 
 void UMSApi::onEvent(const std::string& event_id, const std::string& pagename)
 {
-    pool.enqueue([](const std::string& event_id, const std::string& pagename){
+    pool.enqueue([](const std::string& event_id, const std::string& pagename) {
         manager.eventDataProceed(event_id, pagename);
-    }, event_id, pagename);
+    },
+        event_id, pagename);
 }
 
 void UMSApi::onEvent(const std::string& event_id, const std::string& pagename, int acc)
 {
     pool.enqueue([](const std::string& event_id, const std::string& pagename, int acc) {
         manager.eventDataProceed(event_id, pagename, "", acc);
-    }, event_id, pagename, acc);
-
+    },
+        event_id, pagename, acc);
 }
 
 void UMSApi::onEvent(const std::string event_id, const std::string& pagename, const std::string& label)
 {
     pool.enqueue([](const std::string event_id, const std::string& pagename, const std::string& label) {
         manager.eventDataProceed(event_id, pagename, label);
-    }, event_id, pagename, label);
+    },
+        event_id, pagename, label);
 }
 
 void UMSApi::onEvent(const std::string& event_id, const std::string& pagename, const std::string& label, int acc)
 {
     pool.enqueue([](const std::string& event_id, const std::string& pagename, const std::string& label, int acc) {
         manager.eventDataProceed(event_id, pagename, label, acc);
-    }, event_id, pagename, label, acc);
+    },
+        event_id, pagename, label, acc);
 }
 
 void UMSApi::onPageBegin(const std::string& name)
@@ -139,7 +145,8 @@ void UMSApi::onPageEnd(const std::string& name)
     if (!name.empty()) {
         pool.enqueue([](const std::string& name) {
             UmsManager::getInstance().addPageEnd(name);
-        }, name);
+        },
+            name);
     }
 }
 
@@ -147,22 +154,24 @@ void UMSApi::postTag(const std::string& tag)
 {
     pool.enqueue([](const std::string& tag) {
         manager.tagDataProceed(tag);
-
-    }, tag);
+    },
+        tag);
 }
 
 void UMSApi::postUserid(const std::string& userid)
 {
     pool.enqueue([](const std::string& userid) {
         manager.useridDataProceed(userid);
-    }, userid);
+    },
+        userid);
 }
 
 void UMSApi::postPushid(const std::string& pushid)
 {
     pool.enqueue([](const std::string& pushid) {
         manager.pushidDataProceed(pushid);
-    }, pushid);
+    },
+        pushid);
 }
 
 void UMSApi::postCrashData(const std::string& dumpdir)
@@ -205,29 +214,42 @@ void UMSApi::postCrashData(const std::string& dumpdir)
                     std::ofstream ofs(done);
                     ofs << stacktraceJS.toStyledString();
                     ofs.close();
+                    LOG(INFO) << "write stacktrace to file:" << done;
+                } else {
+                    LOG(WARNING) << "upload dump file failed";
                 }
 
             } else {
                 LOG(WARNING) << "process minidump failed";
             }
         }
-
-    }, dumpdir);
+    },
+        dumpdir);
 }
 
 void UMSApi::updateOnlineConfig()
 {
-    pool.enqueue([]{
+    pool.enqueue([] {
         manager.onlineConfigProceed();
     });
 }
 
-void UMSApi::bindApplicationLanguage(const std::string &language)
+void UMSApi::bindApplicationLanguage(const std::string& language)
 {
     Utility::setApplicationLanguage(language);
 }
 
-void UMSApi::bindBaseUrl(const std::string &url)
+void UMSApi::bindBaseUrl(const std::string& url)
 {
     Constants::kBaseUrl = url;
+    ApplicationSettings settings;
+    settings.Set("url", url);
+    settings.Save();
+    LOG(INFO) << "binded base url:" << url;
+}
+
+bool UMSApi::hasBindBaseUrl()
+{
+    ApplicationSettings settings;
+    return settings.Contains("url");
 }

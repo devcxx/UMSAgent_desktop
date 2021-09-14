@@ -11,6 +11,8 @@ namespace fs = std::filesystem;
 #endif
 #ifndef GHC_USE_STD_FS
 #include <filesystem.hpp>
+#include "easylogging++.h"
+
 namespace fs = ghc::filesystem;
 #endif
 
@@ -65,14 +67,16 @@ bool Uploader::upload(const std::string& url, const std::string& file)
 
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
+        curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
 
         res = curl_easy_perform(curl);
         /* Check for errors */
         if (res != CURLE_OK) {
-            fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
+            LOG(ERROR) << "upload failed:" << curl_easy_strerror(res);
         } else {
             ret = true;
+            LOG(INFO) << "upload success:" << filename;
         }
 
         curl_easy_cleanup(curl);

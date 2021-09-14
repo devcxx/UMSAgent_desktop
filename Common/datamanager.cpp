@@ -49,7 +49,12 @@ void DataManager::allDataProceed()
 {
     if (Utility::isNetWorkConnected() && settings["hasDateToSend"] == "1") {
         std::string allData = Obj2Json::allData2jsonstr();
-        RestClient::Response res = RestClient::post(model.getUrl(DataType::AllDATA), "application/x-www-form-urlencoded", allData);
+        RestClient::Response res;
+        RestClient::Connection *conn = new RestClient::Connection("");
+        conn->SetTimeout(5);
+        conn->AppendHeader("Content-Type", "application/x-www-form-urlencoded");
+        res = conn->post(model.getUrl(DataType::AllDATA), allData);
+        delete conn;
         if (res.code == 200) {
             ApplicationSettings settings;
             if (settings.Contains("clientdata")) {

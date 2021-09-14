@@ -29,10 +29,11 @@ enum class DataType {
  *appkey:the only id of your app
  * url:your web service base url
  * */
-UMSAGENT_EXPORT void onAppStart(const std::string& appKey, const std::string& url);
+UMSAGENT_EXPORT void onAppStart(const std::string& appKey);
 // bind user id
 UMSAGENT_EXPORT void bindUserIdentifier(const std::string& userid);
 UMSAGENT_EXPORT void bindBaseUrl(const std::string& url);
+UMSAGENT_EXPORT bool hasBindBaseUrl();
 UMSAGENT_EXPORT void bindApplicationVersion(const std::string& version);
 UMSAGENT_EXPORT void bindApplicationLanguage(const std::string& language);
 

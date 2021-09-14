@@ -10,6 +10,7 @@
 #include "../Common/ThreadPool.h"
 #include "../Common/Delegate.hpp"
 #include "../Common/filesave.h"
+#include "../Common/easylogging++.h"
 
 #include <string>
 namespace UMSAgent {
@@ -58,6 +59,10 @@ void Post<T>::sendData(const std::string &url)
 //    stateChanged(type, ret, message);
     if (r.code != 200) {
         FileSave::saveFile<T>(type, obj);
+        if (r.code != 404)
+            LOG(WARNING) << "sendData failed, code=" << r.code << ",body=" << r.body;
+        else
+            LOG(WARNING) << "sendData failed, code=" << r.code;
     }
 }
 }
