@@ -4,10 +4,24 @@
 #include <memory>
 
 namespace UMSAgent {
+
+static const char kFile[] = "UMSAgent.ini";
+static const long kMaxSize = 1048576; // 1MB
+
+static long GetFileSize(std::string filename)
+{
+    struct stat stat_buf;
+    int rc = stat(filename.c_str(), &stat_buf);
+    return rc == 0 ? stat_buf.st_size : -1;
+}
+
 LocalStorage::LocalStorage()
 {
     ini = std::make_unique<CSimpleIniA>();
-    ini->LoadFile("UMSAgent.ini");
+    long fSize = GetFileSize(kFile);
+    if (fSize > kMaxSize)
+        std::remove(kFile);
+    ini->LoadFile(kFile);
 }
 
 bool LocalStorage::Contains(const std::string& section, const std::string& key)
@@ -40,7 +54,7 @@ bool LocalStorage::Set(const std::string &section, const std::string &key, const
 bool LocalStorage::Save()
 {
     std::lock_guard<std::mutex> _l(lock);
-    SI_Error rc = ini->SaveFile("UMSAgent.ini");
+    SI_Error rc = ini->SaveFile(kFile);
     return (rc == SI_OK) ? true : false;
 }
 
@@ -74,6 +88,12 @@ bool ApplicationSettings::Save()
 bool ApplicationSettings::Set(const std::string &key, const std::string &value)
 {
     return LocalStorage::getInstance().Set(SECTION, key, value);
+}
+
+std::string ApplicationSettings::Get(const std::string &key)
+{
+    std::string value = LocalStorage::getInstance().Get(SECTION, key);
+    return value;
 }
 
 std::string ApplicationSettings::operator[](const std::string& key) const

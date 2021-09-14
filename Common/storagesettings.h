@@ -27,6 +27,7 @@ public:
     bool Remove(const std::string& key);
     bool Save();
     bool Set(const std::string& key, const std::string& value);
+    std::string Get(const std::string& key);
     std::string operator[](const std::string& key) const;
 
 public:
