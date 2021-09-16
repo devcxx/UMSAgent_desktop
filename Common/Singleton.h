@@ -38,6 +38,18 @@ protected:
     Singleton() { }
 
 private:
+    class GC {
+    public:
+        ~GC()
+        {
+            if (Singleton::sInstance) {
+                delete Singleton::sInstance;
+                Singleton::sInstance = NULL;
+            }
+        }
+    };
+    static GC gc;
+
     Singleton(const Singleton&);
     Singleton& operator=(const Singleton&);
     static std::mutex sLock;
